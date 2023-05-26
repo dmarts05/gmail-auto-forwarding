@@ -1,0 +1,6 @@
+.mypy_cache
+.env
+.venv
+__pycache__
+_build
+dist
