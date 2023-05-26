@@ -1,0 +1,14 @@
+forwarding_target:
+  email: main_account@gmail.com
+  app_password: main_account_app_password
+
+forwarding_accounts:
+  - email: forwarding_account1@gmail.com
+    password: forwarding_account1_password
+  - email: forwarding_account2@gmail.com
+    password: forwarding_account2_password
+  - email: forwarding_account3@gmail.com
+    password: forwarding_account3_password
+
+script:
+  # WIP: Add browser settings here
