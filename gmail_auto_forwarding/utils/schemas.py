@@ -11,7 +11,7 @@ class ConfigFile(NamedTuple):
         - email: the email address of the receiver
         - app_password: the app password of the receiver
     forwarders: a list of Gmail credentials of the forwarders
-    filter: the filter configuration for the emails that will be forwarded
+    forward_filters: the filter configuration for the emails that will be forwarded
         - from: a list of email addresses to filter
         - to: a list of email addresses to filter
         - subject: a list of keywords to filter
@@ -34,5 +34,6 @@ class ConfigFile(NamedTuple):
 
     receiver: Dict[str, str]
     forwarders: List[Dict[str, str]]
-    filter: Dict[str, Union[List[str], Dict[str, Union[int, bool]]]]
+    forward_filters: Dict[str, Union[List[str], Dict[str, Union[int, bool]]]]
     script: Dict[str, bool]
+    proxies: Union[Dict[str, str], Dict[str, bool]]

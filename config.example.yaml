@@ -15,7 +15,7 @@ forwarders:
 # Filter configuration for the emails that will be forwarded
 # Note 1: You can leave the fields that you don't want to filter empty
 # Note 2: Leaving all of the fields empty and by default in size, has_attachment and do_not_include_chats will forward all emails
-filter:
+forward_filters:
   from:
     - example1@example.com
     - example2@example.com
