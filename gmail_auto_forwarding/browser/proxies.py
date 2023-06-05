@@ -1,3 +1,5 @@
+"""Module for getting working proxies."""
+
 import random
 from typing import List
 

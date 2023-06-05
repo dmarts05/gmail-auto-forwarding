@@ -1,4 +1,5 @@
 """Module containing the logger setup function."""
+
 import logging
 import os
 

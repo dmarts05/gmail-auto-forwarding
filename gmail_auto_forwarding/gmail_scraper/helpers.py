@@ -1,3 +1,5 @@
+"""Module for helper functions of the Gmail scraper."""
+
 from email.message import Message
 
 
