@@ -1,14 +1,56 @@
-forwarding_target:
-  email: main_account@gmail.com
-  app_password: main_account_app_password
+# Gmail account credentials for the account that will receive the forwarded emails
+# Note: You must create an app password for your Google account: https://myaccount.google.com/apppasswords
+receiver:
+  email: receiver_account@gmail.com
+  app_password: receiver_account_app_password
 
-forwarding_accounts:
-  - email: forwarding_account1@gmail.com
-    password: forwarding_account1_password
-  - email: forwarding_account2@gmail.com
-    password: forwarding_account2_password
-  - email: forwarding_account3@gmail.com
-    password: forwarding_account3_password
+# Gmail account credentials for the accounts that will forward the emails
+# Note: Password field is not an app password, but the actual password for the account
+forwarders:
+  - email: forwarder_account1@gmail.com
+    password: forwarder_account1_password
+  - email: forwarder_account2@gmail.com
+    password: forwarder_account2_password
 
+# Filter configuration for the emails that will be forwarded
+# Note 1: You can leave the fields that you don't want to filter empty
+# Note 2: Leaving all of the fields empty and by default in size, has_attachment and do_not_include_chats will forward all emails
+filter:
+  from:
+    - example1@example.com
+    - example2@example.com
+  to:
+    - example1@example.com
+    - example2@example.com
+  subject:
+    - example1
+    - example2
+  has_words:
+    - example1
+    - example2
+  has_not_words:
+    - example1
+    - example2
+  size:
+    # Size is in bytes. -1 ignores the size filter
+    # You can either use greater_than or less_than, less_than will be ignored if both are used
+    greater_than: -1
+    less_than: -1
+  has_attachment: false
+  do_not_include_chats: false
+
+# Script configuration
 script:
-  # WIP: Add browser settings here
+  no_images: True # Set to True to disable image loading in Selenium
+  headless: False # Set to True to run Selenium in headless mode
+  virtual_display: False # Set to True to run Selenium in a virtual display. Not compatible with headless mode
+  no_webdriver_manager: False # Set to True to disable webdriver_manager
+
+# Proxy configuration
+# Note 1: The program will fall back to no proxy if the proxy list is empty or if all proxies fail
+# Note 2: Only non-authenticated http or https proxies are supported
+proxies:
+  enable: False # Set to True to enable proxies for the browser
+  list: # List of proxies to use. One will be chosen randomly
+    - 10.10.10.10:8080
+    - 9.9.9.9:8080
