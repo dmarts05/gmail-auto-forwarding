@@ -7,15 +7,15 @@ readme = "README.md"
 packages = [{include = "gmail_auto_forwarding"}]
 
 [tool.poetry.scripts]
-gmail_auto_forwarding = "gmail_auto_forwarding.__main__:main"
+gmail-auto-forwarding = "gmail_auto_forwarding.__main__:main"
 
 [tool.poetry.dependencies]
 python = ">=3.9, <4.0"
 requests = "^2.31.0"
 selenium = "^4.9.1"
-selenium-stealth = "^1.0.6"
-webdriver-manager = "^3.8.6"
 pyyaml = "^6.0"
+pyvirtualdisplay = "^3.0"
+undetected-chromedriver = "^3.5.0"
 
 [tool.poetry.group.dev]
 optional = true

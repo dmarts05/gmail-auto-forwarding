@@ -16,10 +16,10 @@ forwarders:
 # Note 1: You can leave the fields that you don't want to filter empty
 # Note 2: Leaving all of the fields empty and by default in size, has_attachment and do_not_include_chats will forward all emails
 forward_filters:
-  from:
+  from_emails:
     - example1@example.com
     - example2@example.com
-  to:
+  to_emails:
     - example1@example.com
     - example2@example.com
   subject:
@@ -36,7 +36,7 @@ forward_filters:
     # You can either use greater_than or less_than, less_than will be ignored if both are used
     greater_than: -1
     less_than: -1
-  has_attachment: false
+  has_attachments: false
   do_not_include_chats: false
 
 # Script configuration
@@ -44,7 +44,6 @@ script:
   no_images: True # Set to True to disable image loading in Selenium
   headless: False # Set to True to run Selenium in headless mode
   virtual_display: False # Set to True to run Selenium in a virtual display. Not compatible with headless mode
-  no_webdriver_manager: False # Set to True to disable webdriver_manager
 
 # Proxy configuration
 # Note 1: The program will fall back to no proxy if the proxy list is empty or if all proxies fail

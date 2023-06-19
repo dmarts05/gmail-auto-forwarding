@@ -5,3 +5,4 @@ __pycache__
 _build
 dist
 config.yaml
+gmail_auto_forwarding.log

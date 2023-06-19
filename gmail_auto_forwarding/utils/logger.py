@@ -3,7 +3,7 @@
 import logging
 import os
 
-LOG_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "amz_tango_card_scraper.log"))
+LOG_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "gmail_auto_forwarding.log"))
 
 
 def reset_log_file(log_file: str = LOG_FILE_PATH) -> None:

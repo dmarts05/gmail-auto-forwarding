@@ -56,8 +56,8 @@ def verify_forward_filters_section(forward_filters: Dict[str, Union[List[str], D
         The verified forward filters section of the config file.
     """
     required_fields = (
-        "from",
-        "to",
+        "from_emails",
+        "to_emails",
         "subject",
         "has_words",
         "has_not_words",
@@ -83,7 +83,7 @@ def verify_script_section(script: Dict[str, bool]) -> Dict[str, bool]:
     Returns:
         The verified script section of the config file.
     """
-    required_fields = ("no_images", "headless", "virtual_display", "no_webdriver_manager")
+    required_fields = ("no_images", "headless", "virtual_display")
     if not all(field in script for field in required_fields):
         raise ValueError("Missing required field(s) in script section of config file.")
     return script
