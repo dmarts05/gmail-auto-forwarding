@@ -8,12 +8,15 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from gmail_auto_forwarding.browser.extra_actions import wait_for_element_until_clickable
+from gmail_auto_forwarding.gmail_scraper.gmail_scraper import scrape_forwarding_code
 from gmail_auto_forwarding.utils.logger import setup_logger
 
 from .constants import (
+    ADD_FORWARDING_ADDRESS_CSS_SELECTOR,
+    CODE_INPUT_CSS_SELECTOR,
     EMAIL_INPUT_ID,
     EMAIL_NEXT_BUTTON_ID,
-    FORWARDING_EMAIL_INPUT_XPATH,
+    FORWARDING_EMAIL_INPUT_CSS_SELECTOR,
     FORWARDING_NEXT_BUTTON_NAME,
     FORWARDING_SETTINGS_URL,
     GMAIL_URL,
@@ -21,6 +24,7 @@ from .constants import (
     PASSWORD_INPUT_NAME,
     PASSWORD_NEXT_BUTTON_ID,
     SUBMIT_BUTTON_CSS_SELECTOR,
+    VERIFY_BUTTON_CSS_SELECTOR,
     WAIT_TIME_MAX,
     WAIT_TIME_MIN,
 )
@@ -56,8 +60,8 @@ def enable_forwarding(
 
     # Ask to enable forwarding
     logger.info("Asking to enable forwarding...")
-    wait_for_element_until_clickable(browser, (By.XPATH, FORWARDING_EMAIL_INPUT_XPATH)).send_keys(receiver["email"])  # type: ignore # noqa: E501
-    wait_for_element_until_clickable(browser, (By.CSS_SELECTOR, SUBMIT_BUTTON_CSS_SELECTOR)).click()
+    wait_for_element_until_clickable(browser, (By.CSS_SELECTOR, ADD_FORWARDING_ADDRESS_CSS_SELECTOR)).click()  # type: ignore # noqa: E501
+    wait_for_element_until_clickable(browser, (By.CSS_SELECTOR, FORWARDING_EMAIL_INPUT_CSS_SELECTOR)).send_keys(receiver["email"])  # type: ignore # noqa: E501
     browser.find_element(By.NAME, FORWARDING_NEXT_BUTTON_NAME).click()
     sleep(random.randint(WAIT_TIME_MIN, WAIT_TIME_MAX))
 
@@ -75,3 +79,18 @@ def enable_forwarding(
 
     # Accept the confirmation dialog (second one)
     wait_for_element_until_clickable(browser, (By.NAME, OK_BUTTON_NAME)).click()
+
+    sleep(WAIT_TIME_MIN)
+
+    # Get the forwarding code
+    logger.info("Getting the forwarding code...")
+    code = scrape_forwarding_code(receiver["email"], receiver["app_password"])
+    logger.info(f"Forwarding code: {code}")
+
+    # Write the forwarding code and verify forwarding address
+    logger.info("Writing the forwarding code and verifying the forwarding address...")
+    code_input = browser.find_element(By.CSS_SELECTOR, CODE_INPUT_CSS_SELECTOR)
+    code_input.clear()
+    code_input.send_keys(code)  # type: ignore
+
+    browser.find_element(By.CSS_SELECTOR, VERIFY_BUTTON_CSS_SELECTOR).click()
