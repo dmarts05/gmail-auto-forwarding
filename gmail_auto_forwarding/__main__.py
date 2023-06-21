@@ -51,7 +51,6 @@ def main() -> None:
     logger.info("Loading Selenium browser...")
     browser = get_chrome_browser(
         headless=config.script.get("headless", True),
-        no_images=config.script.get("no_images", True),
         proxies=config.proxies.get("list", []) if config.proxies.get("enable", False) else [],  # type: ignore
     )
     logger.info("Selenium browser loaded successfully")

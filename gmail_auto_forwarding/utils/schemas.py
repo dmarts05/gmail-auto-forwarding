@@ -16,14 +16,9 @@ class ConfigFile(NamedTuple):
         - to: a list of email addresses to filter
         - subject: a list of keywords to filter
         - has_words: a list of keywords to filter
-        - has_not_words: a list of keywords to filter
-        - size: the size of the emails to filter (in bytes)
-            greater_than: the minimum size of the emails to filter
-            less_than: the maximum size of the emails to filter
+        - does_not_have_words: a list of keywords to filter
         - has_attachments: whether to filter emails with attachments
-        - do_not_include_chats: whether to filter chat emails
     script: the script configuration for Selenium
-        - no_images: whether to disable images in the browser
         - headless: whether to run the browser in headless mode
         - virtual_display: whether to run the browser in a virtual display
         - no_webdriver_manager: whether to use the webdriver manager

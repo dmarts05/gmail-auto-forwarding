@@ -13,8 +13,8 @@ if TYPE_CHECKING:
 
 
 def get_chrome_browser(
-    headless: bool = True,
-    no_images: bool = True,
+    headless: bool = False,
+    no_images: bool = False,
     proxies: List[str] = [],
 ) -> WebDriver:
     """
