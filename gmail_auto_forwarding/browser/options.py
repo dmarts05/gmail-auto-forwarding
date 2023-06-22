@@ -3,7 +3,6 @@
 import platform
 from typing import List
 
-import requests
 from undetected_chromedriver import ChromeOptions  # type: ignore
 
 from gmail_auto_forwarding.utils.logger import setup_logger
@@ -11,31 +10,6 @@ from gmail_auto_forwarding.utils.logger import setup_logger
 from .proxies import get_random_working_proxy
 
 logger = setup_logger(__name__)
-
-
-def get_browser_language() -> str:
-    """
-    Get the user's browser language.
-
-    Returns:
-        The user's browser language
-    """
-    try:
-        # Get the user's IP address
-        response = requests.get("https://api.ipify.org?format=json")
-        ip = response.json()["ip"]
-
-        # Use the ipapi API to get the user's location data
-        response = requests.get(f"https://ipapi.co/{ip}/json/")
-        location_data = response.json()
-
-        # Get the user's language preference
-        lang = location_data["languages"].split(",")[0]
-    except (requests.exceptions.RequestException, KeyError):
-        # If the API request fails, default to English
-        lang = "en-US"
-
-    return lang
 
 
 def get_chrome_browser_options(
