@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "gmail-auto-forwarding"
-version = "0.1.0"
-description = "A Python project that automatically enables forwarding between a main account and multiple forwarders using customizable from filters."
+version = "1.0.0"
+description = "A Python project that automatically enables forwarding between a receiver account and multiple forwarders using customizable filters."
 authors = ["dmarts05 <dmarts05@estudiantes.unileon.es>"]
 readme = "README.md"
 packages = [{include = "gmail_auto_forwarding"}]
