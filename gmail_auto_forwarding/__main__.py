@@ -1,3 +1,4 @@
+import json
 import os
 
 from pyvirtualdisplay.display import Display
@@ -12,6 +13,7 @@ from gmail_auto_forwarding.utils.exceptions import (
     FailedLoginException,
 )
 from gmail_auto_forwarding.utils.logger import reset_log_file, setup_logger
+from gmail_auto_forwarding.utils.save_results import save_results
 
 logger = setup_logger(logger_name=__name__)
 
@@ -30,10 +32,10 @@ def main() -> None:
     # **************************************************************
     logger.info("Reading configuration file...")
     # Get path of config file in the parent directory
-    config_file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "config.yaml"))
+    CONFIG_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "config.yaml"))
     try:
         # Read config file
-        config = parse_config(config_file_path)
+        config = parse_config(CONFIG_FILE_PATH)
     except ValueError as e:
         logger.error(str(e))
         exit(1)
@@ -44,26 +46,29 @@ def main() -> None:
     logger.debug(f"Configuration: {config}")
 
     # **************************************************************
-    # Get Selenium browser
+    # Browser parameters
     # **************************************************************
+    virtual_display = config.script.get("virtual_display", False)
+    headless = config.script.get("headless", False)
+    proxies = config.proxies.get("list", []) if config.proxies.get("enable", False) else []  # type: ignore
+
     # Start virtual display if enabled
-    if config.script.get("virtual_display", False) and not config.script.get("headless", True):
+    if virtual_display and not headless:
         logger.info("Starting virtual display...")
         Display(visible=False, size=(1920, 1080)).start()
         logger.info("Virtual display started successfully")
-
-    logger.info("Loading Selenium browser...")
-    browser = get_chrome_browser(
-        headless=config.script.get("headless", True),
-        proxies=config.proxies.get("list", []) if config.proxies.get("enable", False) else [],  # type: ignore
-    )
-    logger.info("Selenium browser loaded successfully")
 
     # **************************************************************
     # Enable forwarding for each forwarder
     # **************************************************************
     results = {}
     for forwarder in config.forwarders:
+        logger.info("Loading Selenium browser...")
+        browser = get_chrome_browser(
+            headless=headless,
+            proxies=proxies,  # type: ignore
+        )
+        logger.info("Selenium browser loaded successfully")
         logger.info(f"Enabling forwarding for {forwarder['email']}...")
         try:
             configure_forwarding(browser, forwarder, config.receiver, config.forward_filters)
@@ -72,17 +77,21 @@ def main() -> None:
             results[forwarder["email"]] = str(e)
             logger.error(str(e))
             logger.info("Continuing with next forwarder...")
-            continue
         except Exception as e:
             results[forwarder["email"]] = "Unknown error"
-            logger.error(str(e))
+            logger.error(e.__class__.__name__ + ": " + str(e))
             logger.info("Continuing with next forwarder...")
-            continue
+        finally:
+            browser.quit()
 
-    browser.quit()
-
+    # **************************************************************
+    # Print and save results
+    # **************************************************************
+    logger.info("Saving results...")
+    RESULTS_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "results.txt"))
+    save_results(results, RESULTS_FILE_PATH)
     logger.info("*** Results ***")
-    logger.info(results)
+    logger.info(json.dumps(results, indent=4))
 
 
 if __name__ == "__main__":
