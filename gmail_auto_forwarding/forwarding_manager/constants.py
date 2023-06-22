@@ -4,7 +4,7 @@ WAIT_TIME_MIN = 2
 WAIT_TIME_MAX = 4
 
 # URLs
-GMAIL_URL = "https://www.gmail.com"
+GMAIL_URL = "https://mail.google.com/"
 FORWARDING_SETTINGS_URL = "https://mail.google.com/mail/u/0/#settings/fwdandpop"
 
 # Selectors for Gmail login

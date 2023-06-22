@@ -7,6 +7,10 @@ from gmail_auto_forwarding.config_parser.config_parser import parse_config
 from gmail_auto_forwarding.forwarding_manager.forwarding_manager import (
     configure_forwarding,
 )
+from gmail_auto_forwarding.utils.exceptions import (
+    DuplicateReceiverEmailException,
+    FailedLoginException,
+)
 from gmail_auto_forwarding.utils.logger import reset_log_file, setup_logger
 
 logger = setup_logger(logger_name=__name__)
@@ -58,9 +62,21 @@ def main() -> None:
     # **************************************************************
     # Enable forwarding for each forwarder
     # **************************************************************
+    results = {}
     for forwarder in config.forwarders:
         logger.info(f"Enabling forwarding for {forwarder['email']}...")
-        configure_forwarding(browser, forwarder, config.receiver, config.forward_filters)
+        try:
+            configure_forwarding(browser, forwarder, config.receiver, config.forward_filters)
+            results[forwarder["email"]] = "Success"
+        except (FailedLoginException, DuplicateReceiverEmailException) as e:
+            results[forwarder["email"]] = str(e)
+            logger.error(str(e))
+            logger.info("Continuing with next forwarder...")
+
+    browser.quit()
+
+    logger.info("*** Results ***")
+    logger.info(results)
 
 
 if __name__ == "__main__":

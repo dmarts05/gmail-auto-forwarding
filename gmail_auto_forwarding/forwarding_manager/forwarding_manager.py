@@ -33,6 +33,9 @@ def configure_forwarding(
         forwarder: Dictionary containing the forwarder's email and password.
         receiver: Dictionary containing the receiver's email and app password.
         forward_filters: Dictionary containing the forward filters to be used.
+
+    Raises:
+        FailedLoginException: If the login was unsuccessful.
     """
     logger.info("Logging in to Gmail...")
     login_to_gmail(browser, forwarder["email"], forwarder["password"])

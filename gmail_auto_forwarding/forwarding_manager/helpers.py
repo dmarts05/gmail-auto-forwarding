@@ -4,12 +4,17 @@ import random
 from time import sleep
 from typing import Dict, List
 
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 
 import gmail_auto_forwarding.forwarding_manager.constants as c
 from gmail_auto_forwarding.browser.extra_actions import wait_for_element_until_clickable
 from gmail_auto_forwarding.gmail_scraper.gmail_scraper import scrape_forwarding_code
+from gmail_auto_forwarding.utils.exceptions import (
+    DuplicateReceiverEmailException,
+    FailedLoginException,
+)
 from gmail_auto_forwarding.utils.logger import setup_logger
 
 logger = setup_logger(logger_name=__name__)
@@ -23,6 +28,8 @@ def login_to_gmail(browser: WebDriver, forwarder_email: str, forwarder_passwd: s
         browser: Selenium browser that will be used to login to Gmail.
         forwarder_email: Email of the Gmail account to login to.
         forwarder_passwd: Password of the Gmail account to login to.
+    Raises:
+        FailedLoginException: If the login was unsuccessful.
     """
     logger.info(f"Logging in to {forwarder_email}...")
     browser.get(c.GMAIL_URL)
@@ -35,7 +42,13 @@ def login_to_gmail(browser: WebDriver, forwarder_email: str, forwarder_passwd: s
     wait_for_element_until_clickable(browser, (By.NAME, c.PASSWORD_INPUT_NAME)).send_keys(forwarder_passwd)  # type: ignore # noqa: E501
     browser.find_element(By.ID, c.PASSWORD_NEXT_BUTTON_ID).click()
 
-    # TODO: Check if login was successful
+    # Check if login was successful
+    sleep(c.WAIT_TIME_MIN)
+    browser.get(c.GMAIL_URL)
+    logger.debug(f"Current URL: {browser.current_url}")
+    if c.GMAIL_URL + "mail/u/" not in browser.current_url:
+        raise FailedLoginException("Login failed! Your credentials are probably incorrect or you require 2FA.")
+
     logger.info("Login successful!")
 
 
@@ -62,16 +75,19 @@ def enable_forwarding(browser: WebDriver, receiver_email: str, receiver_app_pass
     browser.find_element(By.NAME, c.FORWARDING_NEXT_BUTTON_NAME).click()
     sleep(random.randint(c.WAIT_TIME_MIN, c.WAIT_TIME_MAX))
 
-    # TODO: Check if the forwarding address is already present
-
     # Accept the confirmation dialog by switching to the new window
     for window_handle in browser.window_handles:
         if window_handle != initial_window:
             browser.switch_to.window(window_handle)  # type: ignore
             break
-    wait_for_element_until_clickable(browser, (By.CSS_SELECTOR, c.SUBMIT_BUTTON_CSS_SELECTOR)).click()
+    try:
+        wait_for_element_until_clickable(browser, (By.CSS_SELECTOR, c.SUBMIT_BUTTON_CSS_SELECTOR)).click()
+    except TimeoutException:
+        # Switch back to initial window
+        browser.switch_to.window(initial_window)  # type: ignore
+        raise DuplicateReceiverEmailException("Forwarding email address has been previously added!")
 
-    # Switch back to the initial window
+    # Switch back to initial window
     browser.switch_to.window(initial_window)  # type: ignore
 
     # Accept the second confirmation dialog
