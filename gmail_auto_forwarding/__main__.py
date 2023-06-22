@@ -72,6 +72,12 @@ def main() -> None:
             results[forwarder["email"]] = str(e)
             logger.error(str(e))
             logger.info("Continuing with next forwarder...")
+            continue
+        except Exception as e:
+            results[forwarder["email"]] = "Unknown error"
+            logger.error(str(e))
+            logger.info("Continuing with next forwarder...")
+            continue
 
     browser.quit()
 
