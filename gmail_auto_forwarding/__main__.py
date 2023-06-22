@@ -21,11 +21,11 @@ logger = setup_logger(logger_name=__name__)
 def main() -> None:
     reset_log_file()
 
-    logger.info("***********************************************")
-    logger.info("*                                             *")
-    logger.info("*           Gmail Auto Forwarding             *")
-    logger.info("*                                             *")
-    logger.info("***********************************************")
+    logger.info("**********************************************")
+    logger.info("*                                            *")
+    logger.info("*           Gmail Auto Forwarding            *")
+    logger.info("*                                            *")
+    logger.info("**********************************************")
 
     # **************************************************************
     # Get program configuration

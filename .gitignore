@@ -6,3 +6,4 @@ _build
 dist
 config.yaml
 gmail_auto_forwarding.log
+results.txt

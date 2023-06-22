@@ -12,6 +12,6 @@ def save_results(results: Dict[str, str], file_path: str) -> None:
     """
     try:
         with open(file_path, "w") as f:
-            f.write(json.dumps(results))
+            f.write(json.dumps(results, indent=4))
     except IOError:
         raise IOError("Could not save results to file")
