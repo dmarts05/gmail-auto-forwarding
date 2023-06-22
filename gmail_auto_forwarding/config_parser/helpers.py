@@ -42,7 +42,9 @@ def verify_forwarders_section(forwarders: List[Dict[str, str]]) -> List[Dict[str
     return forwarders
 
 
-def verify_forward_filters_section(forward_filters: Dict[str, Union[List[str], Dict[str, Union[int, bool]]]]):
+def verify_forward_filters_section(
+    forward_filters: Dict[str, Dict[str, List[str]]]
+) -> Dict[str, Dict[str, List[str]]]:
     """
     Verify the forward filters section of the config file.
 

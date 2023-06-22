@@ -12,6 +12,16 @@ logger = setup_logger(logger_name=__name__)
 
 
 def scrape_forwarding_code(email: str, app_password: str) -> str:
+    """
+    Scrapes the forwarding code from verification emails.
+
+    Args:
+        email: Email address of the account to scrape.
+        app_password: App password of the account to scrape.
+
+    Returns:
+        Forwarding code.
+    """
     mail = imaplib.IMAP4_SSL(IMAP_GMAIL_URL)
     mail.login(email, app_password)
     mail.select("inbox")
@@ -35,6 +45,7 @@ def scrape_forwarding_code(email: str, app_password: str) -> str:
 
                 # Extract the forwarding code
                 code = body.split(": ")[1].split("\n")[0]
+                logger.debug(f"Forwarding code: {code}")
 
                 # Trash email
                 mail.store(msg_id, "+X-GM-LABELS", "\\Trash")

@@ -29,6 +29,6 @@ class ConfigFile(NamedTuple):
 
     receiver: Dict[str, str]
     forwarders: List[Dict[str, str]]
-    forward_filters: Dict[str, Union[List[str], Dict[str, Union[int, bool]]]]
+    forward_filters: Dict[str, Dict[str, List[str]]]
     script: Dict[str, bool]
     proxies: Union[Dict[str, str], Dict[str, bool]]

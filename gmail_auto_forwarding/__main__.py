@@ -4,8 +4,8 @@ from pyvirtualdisplay.display import Display
 
 from gmail_auto_forwarding.browser.chrome import get_chrome_browser
 from gmail_auto_forwarding.config_parser.config_parser import parse_config
-from gmail_auto_forwarding.forwarding_enabler.forwarding_enabler import (
-    enable_forwarding,
+from gmail_auto_forwarding.forwarding_manager.forwarding_manager import (
+    configure_forwarding,
 )
 from gmail_auto_forwarding.utils.logger import reset_log_file, setup_logger
 
@@ -60,7 +60,7 @@ def main() -> None:
     # **************************************************************
     for forwarder in config.forwarders:
         logger.info(f"Enabling forwarding for {forwarder['email']}...")
-        enable_forwarding(browser, forwarder, config.receiver, config.forward_filters)
+        configure_forwarding(browser, forwarder, config.receiver, config.forward_filters)
 
 
 if __name__ == "__main__":
